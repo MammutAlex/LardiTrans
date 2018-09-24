@@ -37,8 +37,8 @@ final class ApiClient
      */
     public function requestCreator(Method $method, array $parameters)
     {
-        $data = $this->validateParameters($parameters, $method->parameters)->dataTransformer($parameters);
-        return $this->doRequest($method->method, $data);
+        $this->validateParameters($parameters, $method->parameters);
+        return $this->doRequest($method->method, $parameters);
     }
 
     /**
@@ -56,21 +56,6 @@ final class ApiClient
             }
         }
         return $this;
-    }
-
-    /**
-     * @param array $parameters
-     *
-     * @return array
-     */
-    private function dataTransformer(array $parameters): array
-    {
-        foreach ($parameters as $key => $value) {
-            if ($key === 'password') {
-                $parameters[$key] = md5($value);
-            }
-        }
-        return $parameters;
     }
 
     /**

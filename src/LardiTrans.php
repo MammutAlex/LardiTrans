@@ -68,7 +68,7 @@ final class LardiTrans
      * @throws Exception\LocalValidateException
      * @throws MethodNotFoundException
      */
-    public function callMethod(string $name, array $parameters): array
+    public function callMethod(string $name, array $parameters = []): array
     {
         if (isset($this->methods[$name])) {
             $parameters['sig'] = $this->getSig();
