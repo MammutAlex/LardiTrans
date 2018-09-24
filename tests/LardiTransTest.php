@@ -35,7 +35,8 @@ final class LardiTransTest extends TestCase
     {
         $this->expectException(ApiErrorException::class);
         $client = new LardiTrans();
-        $client->testSig(['sig' => 'fake_sid']);
+        $client->setSig('fake_sid');
+        $client->testSig();
     }
 
     public function testSendToUndefinedMethod()

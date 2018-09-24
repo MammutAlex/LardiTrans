@@ -56,7 +56,7 @@ final class LardiTrans
      */
     public function __call(string $name, array $arguments): array
     {
-        return $this->callMethod($name, $arguments[0]);
+        return $this->callMethod($name, $arguments[0] ?? []);
     }
 
     /**
@@ -71,6 +71,8 @@ final class LardiTrans
     public function callMethod(string $name, array $parameters): array
     {
         if (isset($this->methods[$name])) {
+            $parameters['sig'] = $this->getSig();
+            $parameters['uid'] = $this->getUid();
             return $this->apiClient->requestCreator($this->methods[$name], $parameters);
         }
         throw new MethodNotFoundException('Api has not method ' . $name);
