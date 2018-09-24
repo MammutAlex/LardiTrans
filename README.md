@@ -1,4 +1,7 @@
 # LardiTrans Api Integration
+[![Latest Stable Version](https://poser.pugx.org/mammut-alex/lardi-trans/v/stable)](https://packagist.org/packages/mammut-alex/lardi-trans)
+[![License](https://poser.pugx.org/mammut-alex/lardi-trans/license)](https://packagist.org/packages/mammut-alex/lardi-trans)
+
 
 ## Installation
 Require this package in your `composer.json` and update composer.
