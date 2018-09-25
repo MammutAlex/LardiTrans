@@ -96,11 +96,11 @@ class LardiTrans
      *
      * @return array Ответ сервера в формате JSON
      *
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      *
      * @link http://api.lardi-trans.com/reference
      */
-    public function callMethod(string $method, array $parameters = []): array
+    public function sendMethod(string $method, array $parameters = []): array
     {
         return $this->apiClient->sendRequest($method, array_merge([
             'sig' => $this->sig,
@@ -115,24 +115,24 @@ class LardiTrans
      *
      * @return array Ответ сервера в формате JSON
      *
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/test
      */
     public function sendTest(string $text = 'Привет'): array
     {
-        return $this->callMethod('test', ['test_text' => $text]);
+        return $this->sendMethod('test', ['test_text' => $text]);
     }
 
     /**
      * Тестовая комманда, для проверки sig-идентификатора
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/test.sig
      */
     public function sendTestSig(): array
     {
-        return $this->callMethod('test.sig');
+        return $this->sendMethod('test.sig');
     }
 
     /**
@@ -143,12 +143,12 @@ class LardiTrans
      * @param bool   $isHash   MD5 {@link $password} сумма пароля или пароль в открытом виде
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/auth
      */
     public function sendAuth(string $login, string $password, bool $isHash = false): array
     {
-        $data = $this->callMethod('auth', [
+        $data = $this->sendMethod('auth', [
             'login' => $login,
             'password' => $isHash ? $password : md5($password)
         ]);
@@ -161,12 +161,12 @@ class LardiTrans
      * Получение партнеров
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/partners.info.get
      */
     public function sendPartnersInfoGet(): array
     {
-        return $this->callMethod('partners.info.get');
+        return $this->sendMethod('partners.info.get');
     }
 
     /**
@@ -175,12 +175,12 @@ class LardiTrans
      * @param string $status текстовый статус пользователя (максимальная длина 255 символов)
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/user.set.status
      */
     public function sendUserSetStatus(string $status): array
     {
-        return $this->callMethod('user.set.status', [
+        return $this->sendMethod('user.set.status', [
             'status' => $status
         ]);
     }
@@ -189,36 +189,36 @@ class LardiTrans
      * Получить список стран и областей
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/base.country
      */
     public function sendBaseCountry(): array
     {
-        return $this->callMethod('base.country');
+        return $this->sendMethod('base.country');
     }
 
     /**
      * Получить список типов автомобилей
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/base.auto_tip
      */
     public function sendBaseAutoTip(): array
     {
-        return $this->callMethod('base.auto_tip');
+        return $this->sendMethod('base.auto_tip');
     }
 
     /**
      * Получить список типов загрузки
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/base.zagruz
      */
     public function sendBaseZagruz(): array
     {
-        return $this->callMethod('base.zagruz');
+        return $this->sendMethod('base.zagruz');
     }
 
     /**
@@ -227,12 +227,12 @@ class LardiTrans
      * @param array $parameters Параметры
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.add
      */
     public function sendMyGruzAdd(array $parameters): array
     {
-        return $this->callMethod('my.gruz.add', $parameters);
+        return $this->sendMethod('my.gruz.add', $parameters);
     }
 
     /**
@@ -241,12 +241,12 @@ class LardiTrans
      * @param array $parameters Параметры
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.trans.add
      */
     public function sendMyTransAdd(array $parameters): array
     {
-        return $this->callMethod('my.trans.add', $parameters);
+        return $this->sendMethod('my.trans.add', $parameters);
     }
 
     /**
@@ -256,12 +256,12 @@ class LardiTrans
      * @param array $parameters Параметры
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.edit
      */
     public function sendMyGruzEdit(int $id, array $parameters): array
     {
-        return $this->callMethod('my.gruz.edit', array_merge($parameters, [
+        return $this->sendMethod('my.gruz.edit', array_merge($parameters, [
             'id' => $id
         ]));
     }
@@ -273,12 +273,12 @@ class LardiTrans
      * @param array $parameters Параметры
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.trans.edit
      */
     public function sendMyTransEdit(int $id, array $parameters): array
     {
-        return $this->callMethod('my.trans.edit', array_merge($parameters, [
+        return $this->sendMethod('my.trans.edit', array_merge($parameters, [
             'id' => $id
         ]));
     }
@@ -287,12 +287,12 @@ class LardiTrans
      * Получение списка "Мои грузы/транспорт"
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.list
      */
     public function sendMyGruzList(): array
     {
-        return $this->callMethod('my.gruz.list');
+        return $this->sendMethod('my.gruz.list');
     }
 
     /**
@@ -301,12 +301,12 @@ class LardiTrans
      * @param int $id ID заявки
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.get
      */
     public function sendMyGruzGet(int $id): array
     {
-        return $this->callMethod('my.gruz.get', [
+        return $this->sendMethod('my.gruz.get', [
             'id' => $id
         ]);
     }
@@ -317,12 +317,12 @@ class LardiTrans
      * @param int $id ID заявки
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.trans.get
      */
     public function sendMyTransGet(int $id): array
     {
-        return $this->callMethod('my.trans.get', [
+        return $this->sendMethod('my.trans.get', [
             'id' => $id
         ]);
     }
@@ -331,12 +331,12 @@ class LardiTrans
      * Получение списка "Мои грузы/транспорт" в сокращенном варианте
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.list.short
      */
     public function sendMyGruzListShort(): array
     {
-        return $this->callMethod('my.gruz.list.short');
+        return $this->sendMethod('my.gruz.list.short');
     }
 
     /**
@@ -345,12 +345,12 @@ class LardiTrans
      * @param int $id ID груза который нужно удалить
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.delete
      */
     public function sendMyGruzDelete(int $id): array
     {
-        return $this->callMethod('my.gruz.delete', [
+        return $this->sendMethod('my.gruz.delete', [
             'id' => $id
         ]);
     }
@@ -361,12 +361,12 @@ class LardiTrans
      * @param int $id ID транспорта который нужно удалить
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.trans.delete
      */
     public function sendMyTransDelete(int $id): array
     {
-        return $this->callMethod('my.trans.delete', [
+        return $this->sendMethod('my.trans.delete', [
             'id' => $id
         ]);
     }
@@ -375,12 +375,12 @@ class LardiTrans
      * Получение списка корзины "Мои грузы/транспорт"
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.trash.list
      */
     public function sendMyGruzTrashList(): array
     {
-        return $this->callMethod('my.gruz.trash.list');
+        return $this->sendMethod('my.gruz.trash.list');
     }
 
     /**
@@ -389,12 +389,12 @@ class LardiTrans
      * @param int $id ID заявки
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.trash.get
      */
     public function sendMyGruzTrashGet(int $id): array
     {
-        return $this->callMethod('my.gruz.trash.get', [
+        return $this->sendMethod('my.gruz.trash.get', [
             'id' => $id
         ]);
     }
@@ -405,12 +405,12 @@ class LardiTrans
      * @param int $id ID заявки
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.trans.trash.get
      */
     public function sendMyTransTrashGet(int $id): array
     {
-        return $this->callMethod('my.trans.trash.get', [
+        return $this->sendMethod('my.trans.trash.get', [
             'id' => $id
         ]);
     }
@@ -419,12 +419,12 @@ class LardiTrans
      * Получение списка корзины "Мои грузы/транспорт" в сокращенном варианте
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.trash.list.short
      */
     public function sendMyGruzTrashListShort(): array
     {
-        return $this->callMethod('my.gruz.trash.list.short');
+        return $this->sendMethod('my.gruz.trash.list.short');
     }
 
     /**
@@ -433,12 +433,12 @@ class LardiTrans
      * @param int $id ID груза который нужно удалить из корзины
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.trash.delete
      */
     public function sendMyGruzTrashDelete(int $id): array
     {
-        return $this->callMethod('my.gruz.trash.delete', [
+        return $this->sendMethod('my.gruz.trash.delete', [
             'id' => $id
         ]);
     }
@@ -449,12 +449,12 @@ class LardiTrans
      * @param int $id ID транспорта который нужно удалить из корзины
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.trans.trash.delete
      */
     public function sendMyTransTrashDelete(int $id): array
     {
-        return $this->callMethod('my.trans.trash.delete', [
+        return $this->sendMethod('my.trans.trash.delete', [
             'id' => $id
         ]);
     }
@@ -465,12 +465,12 @@ class LardiTrans
      * @param int $id ID груза который нужно восстановить из корзины
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.trash.return
      */
     public function sendMyGruzTrashReturn(int $id): array
     {
-        return $this->callMethod('my.gruz.trash.return', [
+        return $this->sendMethod('my.gruz.trash.return', [
             'id' => $id
         ]);
     }
@@ -481,12 +481,12 @@ class LardiTrans
      * @param int $id ID транспорта который нужно восстановить из корзины
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.trans.trash.return
      */
     public function sendMyTransTrashReturn(int $id): array
     {
-        return $this->callMethod('my.trans.trash.return', [
+        return $this->sendMethod('my.trans.trash.return', [
             'id' => $id
         ]);
     }
@@ -497,12 +497,12 @@ class LardiTrans
      * @param int $id ID заявки которую нужно повторить
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.refresh
      */
     public function sendMyGruzRefresh(int $id): array
     {
-        return $this->callMethod('my.gruz.refresh', [
+        return $this->sendMethod('my.gruz.refresh', [
             'id' => $id
         ]);
     }
@@ -513,12 +513,12 @@ class LardiTrans
      * @param int $id ID заявки которую нужно повторить
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.trans.refresh
      */
     public function sendMyTransRefresh(int $id): array
     {
-        return $this->callMethod('my.trans.refresh', [
+        return $this->sendMethod('my.trans.refresh', [
             'id' => $id
         ]);
     }
@@ -529,12 +529,12 @@ class LardiTrans
      * @param array $parameters Параметры
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/distance.calc
      */
     public function sendDistanceCalc(array $parameters): array
     {
-        return $this->callMethod('distance.calc', $parameters);
+        return $this->sendMethod('distance.calc', $parameters);
     }
 
     /**
@@ -543,12 +543,12 @@ class LardiTrans
      * @param string $name Город или часть его названия
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/distance.search
      */
     public function sendDistanceSearch(string $name): array
     {
-        return $this->callMethod('distance.search', [
+        return $this->sendMethod('distance.search', [
             'name' => $name
         ]);
     }
@@ -559,12 +559,12 @@ class LardiTrans
      * @param array $parameters Параметры
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.message.dialog.get
      */
     public function sendMyMessageDialogGet(array $parameters = []): array
     {
-        return $this->callMethod('my.message.dialog.get', $parameters);
+        return $this->sendMethod('my.message.dialog.get', $parameters);
     }
 
     /**
@@ -573,12 +573,12 @@ class LardiTrans
      * @param string $roomId ID диалога
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.message.dialog.get.contents
      */
     public function sendMyMessageDialogGetContents(string $roomId): array
     {
-        return $this->callMethod('my.message.dialog.get.contents', [
+        return $this->sendMethod('my.message.dialog.get.contents', [
             'roomId' => $roomId
         ]);
     }
@@ -592,12 +592,12 @@ class LardiTrans
      *                       прочитанные
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.message.dialog.set.read
      */
     public function sendMyMessageDialogSetRead(string $roomId, bool $status = true): array
     {
-        return $this->callMethod('my.message.dialog.set.read', [
+        return $this->sendMethod('my.message.dialog.set.read', [
             'roomId' => $roomId,
             'read' => $status,
         ]);
@@ -609,12 +609,12 @@ class LardiTrans
      * @param string $roomId ID диалога
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.message.dialog.delete
      */
     public function sendMyMessageDialogDelete(string $roomId): array
     {
-        return $this->callMethod('my.message.dialog.delete', [
+        return $this->sendMethod('my.message.dialog.delete', [
             'roomId' => $roomId,
         ]);
     }
@@ -626,12 +626,12 @@ class LardiTrans
      * @param string $text   Текст сообщения
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.message.send
      */
     public function sendMyMessageSend(string $roomId, string $text): array
     {
-        return $this->callMethod('my.message.send', [
+        return $this->sendMethod('my.message.send', [
             'roomId' => $roomId,
             'text' => $text,
         ]);
@@ -644,12 +644,12 @@ class LardiTrans
      *                      будет создана групповая комната
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.message.room.id.get
      */
     public function sendMyMessageRoomIdGet(string $refId): array
     {
-        return $this->callMethod('my.message.room.id.get', [
+        return $this->sendMethod('my.message.room.id.get', [
             'refId' => $refId,
         ]);
     }
@@ -658,71 +658,71 @@ class LardiTrans
      * Получить список форм оплаты
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/get.payment.form.ref
      */
     public function sendGetPaymentFormRef(): array
     {
-        return $this->callMethod('get.payment.form.ref');
+        return $this->sendMethod('get.payment.form.ref');
     }
 
     /**
      * Получить список моментов оплаты
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/get.payment.moment.ref
      */
     public function sendGetPaymentMomentRef(): array
     {
-        return $this->callMethod('get.payment.moment.ref');
+        return $this->sendMethod('get.payment.moment.ref');
     }
 
     /**
      * Получить список единиц оплаты
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/get.payment.unit.ref
      */
     public function sendGetPaymentUnitRef(): array
     {
-        return $this->callMethod('get.payment.unit.ref');
+        return $this->sendMethod('get.payment.unit.ref');
     }
 
     /**
      * Получить список валют
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/get.payment.valuta.ref
      */
     public function sendGetPaymentValutaRef(): array
     {
-        return $this->callMethod('get.payment.valuta.ref');
+        return $this->sendMethod('get.payment.valuta.ref');
     }
 
     /**
      * Получить список типов кузова
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/body.type
      */
     public function sendBodyType(): array
     {
-        return $this->callMethod('body.type');
+        return $this->sendMethod('body.type');
     }
 
     /**
      * Получить список групп типов кузова
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiErrorException
+     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/body.type.group
      */
     public function sendBodyTypeGroup(): array
     {
-        return $this->callMethod('body.type.group');
+        return $this->sendMethod('body.type.group');
     }
 }

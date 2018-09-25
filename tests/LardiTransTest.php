@@ -2,9 +2,10 @@
 
 namespace Tests;
 
+use MammutAlex\LardiTrans\Exception\ApiAuthException;
+use MammutAlex\LardiTrans\Exception\ApiMethodException;
 use PHPUnit\Framework\TestCase;
 use MammutAlex\LardiTrans\LardiTrans;
-use MammutAlex\LardiTrans\Exception\ApiErrorException;
 
 final class LardiTransTest extends TestCase
 {
@@ -14,19 +15,27 @@ final class LardiTransTest extends TestCase
         $data = $client->sendTest('Привет');
         $this->assertSame('Привет', $data['test_text']);
     }
+
     public function testSendSystemTestRequestInMetod()
     {
         $client = new LardiTrans();
-        $data = $client->callMethod('test',['test_text' => 'Привет']);
+        $data = $client->sendMethod('test', ['test_text' => 'Привет']);
         $this->assertSame('Привет', $data['test_text']);
     }
 
-    public function testSendSystemTestSidRequestAuthError()
+    public function testSidAuthError()
     {
-        $this->expectException(ApiErrorException::class);
+        $this->expectException(ApiAuthException::class);
         $client = new LardiTrans();
         $client->setSig('fake_sid');
         $client->sendTestSig();
+    }
+
+    public function testApiMethodError()
+    {
+        $this->expectException(ApiMethodException::class);
+        $client = new LardiTrans();
+        $client->sendMethod('error.method.test');
     }
 
     public function testAddAndGetSig()

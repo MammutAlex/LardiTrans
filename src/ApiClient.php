@@ -3,14 +3,16 @@
 namespace MammutAlex\LardiTrans;
 
 use GuzzleHttp\Client;
-use MammutAlex\LardiTrans\Exception\ApiErrorException;
+use MammutAlex\LardiTrans\Exception\ApiAuthException;
+use MammutAlex\LardiTrans\Exception\ApiException;
+use MammutAlex\LardiTrans\Exception\ApiMethodException;
 
 /**
  * Class ApiClient
  *
  * @package MammutAlex\LardiTrans
  */
-final class ApiClient
+class ApiClient
 {
     /**
      * Url адрес api сервера
@@ -44,7 +46,7 @@ final class ApiClient
      *
      * @return array Ответ сервера в формате JSON
      *
-     * @throws ApiErrorException
+     * @throws ApiException
      */
     public function sendRequest(string $method, array $parameters): array
     {
@@ -53,7 +55,18 @@ final class ApiClient
         ]);
         $data = $this->xmlDecoder($response->getBody()->getContents());
         if (isset($data['error'])) {
-            throw new ApiErrorException($data['error']);
+            var_dump($data['error']);
+            switch ($data['error']) {
+                case 'Command not found':
+                    throw new ApiMethodException($data['error']);
+                    break;
+                case 'SIG идентификатор устарел или указан не верно':
+                case 'Не авторизирован':
+                    throw new ApiAuthException($data['error']);
+                    break;
+                default:
+                    throw new ApiException($data['error']);
+            }
         }
         return $data;
 

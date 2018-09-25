@@ -11,7 +11,7 @@ namespace MammutAlex\LardiTrans\Exception;
 
 use Exception;
 
-class ApiErrorException extends Exception
+class ApiException extends Exception
 {
 
     public function __construct(string $message = "Api error")
