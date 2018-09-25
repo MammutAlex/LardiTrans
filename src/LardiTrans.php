@@ -2,91 +2,59 @@
 
 namespace MammutAlex\LardiTrans;
 
-use MammutAlex\LardiTrans\Exception\MethodNotFoundException;
-
 /**
  * Class LardiTrans
+ *
+ * @author  Alex Kovalchuk alex@cargofy.com
  * @package MammutAlex\LardiTrans
  */
-final class LardiTrans
+class LardiTrans
 {
+    /**
+     * Уникальный номер, аналог PHP сессии
+     *
+     * @access private
+     * @var string
+     */
     private $sig;
+
+    /**
+     * Основной номер фирмы
+     *
+     * @access private
+     * @var string
+     */
     private $uid;
 
-    private $methods = [];
+    /**
+     * API клиент
+     *
+     * @access private
+     * @var ApiClient
+     */
     private $apiClient;
 
     /**
-     * LardiTrans constructor.
+     * Конструктор устанавливает API клиента
      */
     public function __construct()
     {
         $this->apiClient = new ApiClient();
-        $this->setDefaultMethods();
     }
 
     /**
-     * @param string $name
-     * @param Method $method
+     * Получение внутренней переменной sig
      *
-     * @return LardiTrans
+     * @return string
      */
-    public function setMethod(string $name, Method $method): self
-    {
-        $this->methods[$name] = $method;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMethods(): array
-    {
-        return $this->methods;
-    }
-
-    /**
-     * @param string $name
-     * @param array  $arguments
-     *
-     * @return array
-     * @throws Exception\ApiErrorException
-     * @throws Exception\LocalValidateException
-     * @throws MethodNotFoundException
-     */
-    public function __call(string $name, array $arguments): array
-    {
-        return $this->callMethod($name, $arguments[0] ?? []);
-    }
-
-    /**
-     * @param string $name
-     * @param array  $parameters
-     *
-     * @return array
-     * @throws Exception\ApiErrorException
-     * @throws Exception\LocalValidateException
-     * @throws MethodNotFoundException
-     */
-    public function callMethod(string $name, array $parameters = []): array
-    {
-        if (isset($this->methods[$name])) {
-            $parameters['sig'] = $this->getSig();
-            $parameters['uid'] = $this->getUid();
-            return $this->apiClient->requestCreator($this->methods[$name], $parameters);
-        }
-        throw new MethodNotFoundException('Api has not method ' . $name);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSig()
+    public function getSig(): string
     {
         return $this->sig;
     }
 
     /**
+     * Задает новое значения для внутренней переменной sig
+     *
      * @param string $sid
      *
      * @return LardiTrans
@@ -98,14 +66,18 @@ final class LardiTrans
     }
 
     /**
-     * @return mixed
+     * Получение внутренней переменной sig
+     *
+     * @return string
      */
-    public function getUid()
+    public function getUid(): string
     {
         return $this->uid;
     }
 
     /**
+     * Задает новое значения для внутренней переменной uid
+     *
      * @param string $uid
      *
      * @return LardiTrans
@@ -116,316 +88,641 @@ final class LardiTrans
         return $this;
     }
 
-    private function setDefaultMethods()
+    /**
+     * Отправка запроса на сервер
+     *
+     * @param string $method     назва метода
+     * @param array  $parameters параметры
+     *
+     * @return array Ответ сервера в формате JSON
+     *
+     * @throws Exception\ApiErrorException
+     *
+     * @link http://api.lardi-trans.com/reference
+     */
+    public function callMethod(string $method, array $parameters = []): array
     {
-        $this
-            /**
-             * @link http://api.lardi-trans.com/doc/test
-             */
-            ->setMethod('test', new Method('test', [
-                'test_text'
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/test.sig
-             */
-            ->setMethod('testSig', new Method('test.sig', [
-                'sig'
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/auth
-             */
-            ->setMethod('auth', new Method('auth', [
-                'login',
-                'password'
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/partners.info.get
-             */
-            ->setMethod('partnersInfoGet', new Method('partners.info.get', [
-                'sig'
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/partners.info.get
-             */
-            ->setMethod('usersFirmInfo', new Method('users.firm.info', [
-                'sig',
-                'uid'
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/user.set.status
-             */
-            ->setMethod('userSetStatus', new Method('user.set.status', [
-                'sig',
-                'status',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/base.country
-             */
-            ->setMethod('baseCountry', new Method('base.country', [
-                'sig'
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/base.auto_tip
-             */
-            ->setMethod('baseAutoTip', new Method('base.auto_tip', [
-                'sig'
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/base.zagruz
-             */
-            ->setMethod('baseZagruz', new Method('base.zagruz', [
-                'sig'
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.gruz.add
-             */
-            ->setMethod('myGruzAdd', new Method('my.gruz.add', [
-                'sig',
-                'country_from_id',
-                'area_from_id',
-                'city_from',
-                'country_to_id',
-                'city_to',
-                'date_from',
-                'gruz',
-                'body_type_group_id',
-                'mass',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.trans.add
-             */
-            ->setMethod('myTransAdd', new Method('my.trans.add', [
-                'sig',
-                'country_from_id',
-                'region_from_id',
-                'area_from_id',
-                'city_from',
-                'country_to_id',
-                'city_to',
-                'date_from',
-                'body_type_id',
-                'body_type_group_id',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.gruz.edit
-             */
-            ->setMethod('myGruzEdit', new Method('my.gruz.edit', [
-                'id',
-                'sig',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.trans.edit
-             */
-            ->setMethod('myGruzEdit', new Method('my.trans.edit', [
-                'id',
-                'sig',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.gruz.list
-             */
-            ->setMethod('myGruzList', new Method('my.gruz.list', [
-                'sig',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.gruz.get
-             */
-            ->setMethod('myGruzGet', new Method('my.gruz.get', [
-                'sig',
-                'id',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.trans.get
-             */
-            ->setMethod('myTransGet', new Method('my.trans.get', [
-                'sig',
-                'id',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.gruz.list.short
-             */
-            ->setMethod('myGruzListShort', new Method('my.gruz.list.short', [
-                'sig',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.gruz.delete
-             */
-            ->setMethod('myGruzDelete', new Method('my.gruz.delete', [
-                'sig',
-                'id',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.trans.delete
-             */
-            ->setMethod('myTransDelete', new Method('my.trans.delete', [
-                'sig',
-                'id',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.trans.delete
-             */
-            ->setMethod('myTransDelete', new Method('my.trans.delete', [
-                'sig',
-                'id',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.gruz.trash.list
-             */
-            ->setMethod('myGruzTrashList', new Method('my.gruz.trash.list', [
-                'sig',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.gruz.trash.get
-             */
-            ->setMethod('myGruzTrashGet', new Method('my.gruz.trash.get', [
-                'sig',
-                'id',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.trans.trash.get
-             */
-            ->setMethod('myTransTrashGet', new Method('my.trans.trash.get', [
-                'sig',
-                'id',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.gruz.trash.list.short
-             */
-            ->setMethod('myGruzTrashListShort', new Method('my.gruz.trash.list.short', [
-                'sig',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.gruz.trash.delete
-             */
-            ->setMethod('myGruzTrashDelete', new Method('my.gruz.trash.delete', [
-                'sig',
-                'id',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.trans.trash.delete
-             */
-            ->setMethod('myTransTrashDelete', new Method('my.trans.trash.delete', [
-                'sig',
-                'id',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.trans.trash.delete
-             */
-            ->setMethod('myTransTrashDelete', new Method('my.trans.trash.delete', [
-                'sig',
-                'id',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.gruz.trash.return
-             */
-            ->setMethod('myGruzTrashReturn', new Method('my.gruz.trash.return', [
-                'sig',
-                'id',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.gruz.refresh
-             */
-            ->setMethod('myGruzRefresh', new Method('my.gruz.refresh', [
-                'sig',
-                'id',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.trans.refresh
-             */
-            ->setMethod('myTransRefresh', new Method('my.trans.refresh', [
-                'sig',
-                'id',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/distance.calc
-             */
-            ->setMethod('distanceCalc', new Method('distance.calc', [
-                'sig',
-                'towns',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/distance.search
-             */
-            ->setMethod('distanceSearch', new Method('distance.search', [
-                'sig',
-                'name',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.message.dialog.get
-             */
-            ->setMethod('myMessageDialogGet', new Method('my.message.dialog.get', [
-                'sig',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.message.dialog.get.contents
-             */
-            ->setMethod('myMessageDialogGetContents', new Method('my.message.dialog.get.contents', [
-                'sig',
-                'roomId',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.message.dialog.set.read
-             */
-            ->setMethod('myMessageDialogSetRead', new Method('my.message.dialog.set.read', [
-                'sig',
-                'roomId',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.message.dialog.delete
-             */
-            ->setMethod('myMessageDialogDelete', new Method('my.message.dialog.delete', [
-                'sig',
-                'roomId',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.message.send
-             */
-            ->setMethod('myMessageSend', new Method('my.message.send', [
-                'sig',
-                'roomId',
-                'text',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/my.message.room.id.get
-             */
-            ->setMethod('myMessageRoomIdGet', new Method('my.message.room.id.get', [
-                'sig',
-                'refId',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/get.payment.form.ref
-             */
-            ->setMethod('getPaymentFormRef', new Method('get.payment.form.ref', [
-                'sig',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/get.payment.moment.ref
-             */
-            ->setMethod('getPaymentMomentRef', new Method('get.payment.moment.ref', [
-                'sig',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/get.payment.unit.ref
-             */
-            ->setMethod('getPaymentUnitRef', new Method('get.payment.unit.ref', [
-                'sig',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/get.payment.valuta.ref
-             */
-            ->setMethod('getPaymentValutaRef', new Method('get.payment.valuta.ref', [
-                'sig',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/body.type
-             */
-            ->setMethod('bodyType', new Method('body.type', [
-                'sig',
-            ]))
-            /**
-             * @link http://api.lardi-trans.com/doc/body.type.group
-             */
-            ->setMethod('bodyTypeGroup', new Method('body.type.group', [
-                'sig',
-            ]));
+        return $this->apiClient->sendRequest($method, array_merge([
+            'sig' => $this->sig,
+            'uid' => $this->uid,
+        ], $parameters));
+    }
+
+    /**
+     * Тестовая комманда, для проверки работоспособности и т.д.
+     *
+     * @param string $text Слово, для проверки правильности восприятия русских букв
+     *
+     * @return array Ответ сервера в формате JSON
+     *
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/test
+     */
+    public function sendTest(string $text = 'Привет'): array
+    {
+        return $this->callMethod('test', ['test_text' => $text]);
+    }
+
+    /**
+     * Тестовая комманда, для проверки sig-идентификатора
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/test.sig
+     */
+    public function sendTestSig(): array
+    {
+        return $this->callMethod('test.sig');
+    }
+
+    /**
+     * Функция для авторизации, если не произошло ошибки, то устанавливает {@link $sig} и {@link $uid}
+     *
+     * @param string $login    Логин в системе lardi-trans.com
+     * @param string $password Пароль или хеш пароля
+     * @param bool   $isHash   MD5 {@link $password} сумма пароля или пароль в открытом виде
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/auth
+     */
+    public function sendAuth(string $login, string $password, bool $isHash = false): array
+    {
+        $data = $this->callMethod('auth', [
+            'login' => $login,
+            'password' => $isHash ? $password : md5($password)
+        ]);
+        $this->setSig($data['sig']);
+        $this->setUid($data['uid']);
+        return $data;
+    }
+
+    /**
+     * Получение партнеров
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/partners.info.get
+     */
+    public function sendPartnersInfoGet(): array
+    {
+        return $this->callMethod('partners.info.get');
+    }
+
+    /**
+     * Метод установки статуса пользователя
+     *
+     * @param string $status текстовый статус пользователя (максимальная длина 255 символов)
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/user.set.status
+     */
+    public function sendUserSetStatus(string $status): array
+    {
+        return $this->callMethod('user.set.status', [
+            'status' => $status
+        ]);
+    }
+
+    /**
+     * Получить список стран и областей
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/base.country
+     */
+    public function sendBaseCountry(): array
+    {
+        return $this->callMethod('base.country');
+    }
+
+    /**
+     * Получить список типов автомобилей
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/base.auto_tip
+     */
+    public function sendBaseAutoTip(): array
+    {
+        return $this->callMethod('base.auto_tip');
+    }
+
+    /**
+     * Получить список типов загрузки
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/base.zagruz
+     */
+    public function sendBaseZagruz(): array
+    {
+        return $this->callMethod('base.zagruz');
+    }
+
+    /**
+     * Добавление заявки по грузам
+     *
+     * @param array $parameters Параметры
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.gruz.add
+     */
+    public function sendMyGruzAdd(array $parameters): array
+    {
+        return $this->callMethod('my.gruz.add', $parameters);
+    }
+
+    /**
+     * Добавление заявки по транспорту
+     *
+     * @param array $parameters Параметры
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.trans.add
+     */
+    public function sendMyTransAdd(array $parameters): array
+    {
+        return $this->callMethod('my.trans.add', $parameters);
+    }
+
+    /**
+     * Редактирование заявки по грузам
+     *
+     * @param int   $id         ID заявки для редактирования
+     * @param array $parameters Параметры
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.gruz.edit
+     */
+    public function sendMyGruzEdit(int $id, array $parameters): array
+    {
+        return $this->callMethod('my.gruz.edit', array_merge($parameters, [
+            'id' => $id
+        ]));
+    }
+
+    /**
+     * Редактирование заявки по транспорту
+     *
+     * @param int   $id         ID заявки для редактирования
+     * @param array $parameters Параметры
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.trans.edit
+     */
+    public function sendMyTransEdit(int $id, array $parameters): array
+    {
+        return $this->callMethod('my.trans.edit', array_merge($parameters, [
+            'id' => $id
+        ]));
+    }
+
+    /**
+     * Получение списка "Мои грузы/транспорт"
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.gruz.list
+     */
+    public function sendMyGruzList(): array
+    {
+        return $this->callMethod('my.gruz.list');
+    }
+
+    /**
+     * Получение одной заявки по грузам
+     *
+     * @param int $id ID заявки
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.gruz.get
+     */
+    public function sendMyGruzGet(int $id): array
+    {
+        return $this->callMethod('my.gruz.get', [
+            'id' => $id
+        ]);
+    }
+
+    /**
+     * Получение одной заявки по транспорту
+     *
+     * @param int $id ID заявки
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.trans.get
+     */
+    public function sendMyTransGet(int $id): array
+    {
+        return $this->callMethod('my.trans.get', [
+            'id' => $id
+        ]);
+    }
+
+    /**
+     * Получение списка "Мои грузы/транспорт" в сокращенном варианте
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.gruz.list.short
+     */
+    public function sendMyGruzListShort(): array
+    {
+        return $this->callMethod('my.gruz.list.short');
+    }
+
+    /**
+     * Удалить свой груз
+     *
+     * @param int $id ID груза который нужно удалить
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.gruz.delete
+     */
+    public function sendMyGruzDelete(int $id): array
+    {
+        return $this->callMethod('my.gruz.delete', [
+            'id' => $id
+        ]);
+    }
+
+    /**
+     * Удалить свой транспорт
+     *
+     * @param int $id ID транспорта который нужно удалить
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.trans.delete
+     */
+    public function sendMyTransDelete(int $id): array
+    {
+        return $this->callMethod('my.trans.delete', [
+            'id' => $id
+        ]);
+    }
+
+    /**
+     * Получение списка корзины "Мои грузы/транспорт"
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.gruz.trash.list
+     */
+    public function sendMyGruzTrashList(): array
+    {
+        return $this->callMethod('my.gruz.trash.list');
+    }
+
+    /**
+     * Получение одной заявки по грузам из корзины
+     *
+     * @param int $id ID заявки
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.gruz.trash.get
+     */
+    public function sendMyGruzTrashGet(int $id): array
+    {
+        return $this->callMethod('my.gruz.trash.get', [
+            'id' => $id
+        ]);
+    }
+
+    /**
+     * Получение одной заявки по транспорту из корзины
+     *
+     * @param int $id ID заявки
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.trans.trash.get
+     */
+    public function sendMyTransTrashGet(int $id): array
+    {
+        return $this->callMethod('my.trans.trash.get', [
+            'id' => $id
+        ]);
+    }
+
+    /**
+     * Получение списка корзины "Мои грузы/транспорт" в сокращенном варианте
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.gruz.trash.list.short
+     */
+    public function sendMyGruzTrashListShort(): array
+    {
+        return $this->callMethod('my.gruz.trash.list.short');
+    }
+
+    /**
+     * Удалить свой груз из корзины
+     *
+     * @param int $id ID груза который нужно удалить из корзины
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.gruz.trash.delete
+     */
+    public function sendMyGruzTrashDelete(int $id): array
+    {
+        return $this->callMethod('my.gruz.trash.delete', [
+            'id' => $id
+        ]);
+    }
+
+    /**
+     * Удалить свой транспорт из корзины
+     *
+     * @param int $id ID транспорта который нужно удалить из корзины
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.trans.trash.delete
+     */
+    public function sendMyTransTrashDelete(int $id): array
+    {
+        return $this->callMethod('my.trans.trash.delete', [
+            'id' => $id
+        ]);
+    }
+
+    /**
+     * Извлечь груз из корзины по номеру
+     *
+     * @param int $id ID груза который нужно восстановить из корзины
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.gruz.trash.return
+     */
+    public function sendMyGruzTrashReturn(int $id): array
+    {
+        return $this->callMethod('my.gruz.trash.return', [
+            'id' => $id
+        ]);
+    }
+
+    /**
+     * Извлечь транспорт из корзины по номеру
+     *
+     * @param int $id ID транспорта который нужно восстановить из корзины
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.trans.trash.return
+     */
+    public function sendMyTransTrashReturn(int $id): array
+    {
+        return $this->callMethod('my.trans.trash.return', [
+            'id' => $id
+        ]);
+    }
+
+    /**
+     * Повтор заявки по грузам
+     *
+     * @param int $id ID заявки которую нужно повторить
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.gruz.refresh
+     */
+    public function sendMyGruzRefresh(int $id): array
+    {
+        return $this->callMethod('my.gruz.refresh', [
+            'id' => $id
+        ]);
+    }
+
+    /**
+     * Повтор заявки по транспорту
+     *
+     * @param int $id ID заявки которую нужно повторить
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.trans.refresh
+     */
+    public function sendMyTransRefresh(int $id): array
+    {
+        return $this->callMethod('my.trans.refresh', [
+            'id' => $id
+        ]);
+    }
+
+    /**
+     * Расчет расстояния и предложение маршрута
+     *
+     * @param array $parameters Параметры
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/distance.calc
+     */
+    public function sendDistanceCalc(array $parameters): array
+    {
+        return $this->callMethod('distance.calc', $parameters);
+    }
+
+    /**
+     * Получение списка возможных городов по части его названия
+     *
+     * @param string $name Город или часть его названия
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/distance.search
+     */
+    public function sendDistanceSearch(string $name): array
+    {
+        return $this->callMethod('distance.search', [
+            'name' => $name
+        ]);
+    }
+
+    /**
+     * Получение диалогов
+     *
+     * @param array $parameters Параметры
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.message.dialog.get
+     */
+    public function sendMyMessageDialogGet(array $parameters = []): array
+    {
+        return $this->callMethod('my.message.dialog.get', $parameters);
+    }
+
+    /**
+     * Получение всех сообщений диалога
+     *
+     * @param string $roomId ID диалога
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.message.dialog.get.contents
+     */
+    public function sendMyMessageDialogGetContents(string $roomId): array
+    {
+        return $this->callMethod('my.message.dialog.get.contents', [
+            'roomId' => $roomId
+        ]);
+    }
+
+    /**
+     * Установить статус диалога "прочитан/не прочитан", в зависимости от флага read.
+     * Возвращает список диалогов, для которых устанавливался статус, с их статусами
+     *
+     * @param string $roomId ID диалога
+     * @param bool   $status статус, в который нужно перевести диалоги, по умолчанию диалоги установятся, как
+     *                       прочитанные
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.message.dialog.set.read
+     */
+    public function sendMyMessageDialogSetRead(string $roomId, bool $status = true): array
+    {
+        return $this->callMethod('my.message.dialog.set.read', [
+            'roomId' => $roomId,
+            'read' => $status,
+        ]);
+    }
+
+    /**
+     * Удалить диалог
+     *
+     * @param string $roomId ID диалога
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.message.dialog.delete
+     */
+    public function sendMyMessageDialogDelete(string $roomId): array
+    {
+        return $this->callMethod('my.message.dialog.delete', [
+            'roomId' => $roomId,
+        ]);
+    }
+
+    /**
+     * Отправить сообщение
+     *
+     * @param string $roomId ID диалога
+     * @param string $text   Текст сообщения
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.message.send
+     */
+    public function sendMyMessageSend(string $roomId, string $text): array
+    {
+        return $this->callMethod('my.message.send', [
+            'roomId' => $roomId,
+            'text' => $text,
+        ]);
+    }
+
+    /**
+     * Получить id комнаты для партнера/Cоздание групповой комнаты
+     *
+     * @param string $refId RefId партнера, для которго необходимо получить roomId, если указать более одного refId
+     *                      будет создана групповая комната
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/my.message.room.id.get
+     */
+    public function sendMyMessageRoomIdGet(string $refId): array
+    {
+        return $this->callMethod('my.message.room.id.get', [
+            'refId' => $refId,
+        ]);
+    }
+
+    /**
+     * Получить список форм оплаты
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/get.payment.form.ref
+     */
+    public function sendGetPaymentFormRef(): array
+    {
+        return $this->callMethod('get.payment.form.ref');
+    }
+
+    /**
+     * Получить список моментов оплаты
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/get.payment.moment.ref
+     */
+    public function sendGetPaymentMomentRef(): array
+    {
+        return $this->callMethod('get.payment.moment.ref');
+    }
+
+    /**
+     * Получить список единиц оплаты
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/get.payment.unit.ref
+     */
+    public function sendGetPaymentUnitRef(): array
+    {
+        return $this->callMethod('get.payment.unit.ref');
+    }
+
+    /**
+     * Получить список валют
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/get.payment.valuta.ref
+     */
+    public function sendGetPaymentValutaRef(): array
+    {
+        return $this->callMethod('get.payment.valuta.ref');
+    }
+
+    /**
+     * Получить список типов кузова
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/body.type
+     */
+    public function sendBodyType(): array
+    {
+        return $this->callMethod('body.type');
+    }
+
+    /**
+     * Получить список групп типов кузова
+     *
+     * @return array Ответ сервера в формате JSON
+     * @throws Exception\ApiErrorException
+     * @link http://api.lardi-trans.com/doc/body.type.group
+     */
+    public function sendBodyTypeGroup(): array
+    {
+        return $this->callMethod('body.type.group');
     }
 }

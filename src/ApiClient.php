@@ -4,16 +4,28 @@ namespace MammutAlex\LardiTrans;
 
 use GuzzleHttp\Client;
 use MammutAlex\LardiTrans\Exception\ApiErrorException;
-use MammutAlex\LardiTrans\Exception\LocalValidateException;
 
 /**
  * Class ApiClient
+ *
  * @package MammutAlex\LardiTrans
  */
 final class ApiClient
 {
+    /**
+     * Url адрес api сервера
+     *
+     * @access private
+     * @var  string
+     */
     private const API_URL = 'http://api.lardi-trans.com';
 
+    /**
+     * Http клиент
+     *
+     * @access private
+     * @var  Client
+     */
     private $httpClient;
 
     /**
@@ -25,52 +37,21 @@ final class ApiClient
     }
 
     /**
-     * Send request to LardiTrans api
+     * Отсылает запрос к LardiTrans api
      *
-     * @param Method $method
-     * @param array  $parameters
+     * @param string $method     Метод
+     * @param array  $parameters Параметры
      *
-     * @return array
+     * @return array Ответ сервера в формате JSON
      *
      * @throws ApiErrorException
-     * @throws LocalValidateException
      */
-    public function requestCreator(Method $method, array $parameters)
-    {
-        $this->validateParameters($parameters, $method->parameters);
-        return $this->doRequest($method->method, $parameters);
-    }
-
-    /**
-     * @param array $parameters
-     * @param array $required
-     *
-     * @return ApiClient
-     * @throws LocalValidateException
-     */
-    private function validateParameters(array $parameters, array $required): self
-    {
-        foreach ($required as $value) {
-            if (!isset($parameters[$value])) {
-                throw new LocalValidateException();
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @param string $method
-     * @param array  $params
-     *
-     * @return mixed
-     * @throws ApiErrorException
-     */
-    private function doRequest(string $method, array $params)
+    public function sendRequest(string $method, array $parameters): array
     {
         $response = $this->httpClient->post('api', [
-            'query' => array_merge($params, ['method' => $method])
+            'query' => array_merge($parameters, ['method' => $method])
         ]);
-        $data = $this->apiProxy($response->getBody()->getContents());
+        $data = $this->xmlDecoder($response->getBody()->getContents());
         if (isset($data['error'])) {
             throw new ApiErrorException($data['error']);
         }
@@ -79,11 +60,13 @@ final class ApiClient
     }
 
     /**
-     * @param string $response
+     * Перевод XML в JSON array
      *
-     * @return mixed
+     * @param string $response строка XML
+     *
+     * @return array Массив в формате JSON
      */
-    private function apiProxy(string $response)
+    private function xmlDecoder(string $response): array
     {
         $xml = simplexml_load_string($response);
         $json = json_encode($xml);
