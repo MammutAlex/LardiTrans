@@ -45,8 +45,6 @@ class ApiClient
      * @param array  $parameters Параметры
      *
      * @return array Ответ сервера в формате JSON
-     *
-     * @throws ApiException
      */
     public function sendRequest(string $method, array $parameters): array
     {

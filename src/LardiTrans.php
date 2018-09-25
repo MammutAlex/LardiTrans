@@ -95,9 +95,6 @@ class LardiTrans
      * @param array  $parameters параметры
      *
      * @return array Ответ сервера в формате JSON
-     *
-     * @throws Exception\ApiException
-     *
      * @link http://api.lardi-trans.com/reference
      */
     public function sendMethod(string $method, array $parameters = []): array
@@ -115,7 +112,6 @@ class LardiTrans
      *
      * @return array Ответ сервера в формате JSON
      *
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/test
      */
     public function sendTest(string $text = 'Привет'): array
@@ -127,7 +123,6 @@ class LardiTrans
      * Тестовая комманда, для проверки sig-идентификатора
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/test.sig
      */
     public function sendTestSig(): array
@@ -143,7 +138,6 @@ class LardiTrans
      * @param bool   $isHash   MD5 {@link $password} сумма пароля или пароль в открытом виде
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/auth
      */
     public function sendAuth(string $login, string $password, bool $isHash = false): array
@@ -161,7 +155,6 @@ class LardiTrans
      * Получение партнеров
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/partners.info.get
      */
     public function sendPartnersInfoGet(): array
@@ -175,7 +168,6 @@ class LardiTrans
      * @param string $status текстовый статус пользователя (максимальная длина 255 символов)
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/user.set.status
      */
     public function sendUserSetStatus(string $status): array
@@ -189,7 +181,6 @@ class LardiTrans
      * Получить список стран и областей
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/base.country
      */
     public function sendBaseCountry(): array
@@ -201,7 +192,6 @@ class LardiTrans
      * Получить список типов автомобилей
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/base.auto_tip
      */
     public function sendBaseAutoTip(): array
@@ -213,7 +203,6 @@ class LardiTrans
      * Получить список типов загрузки
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/base.zagruz
      */
     public function sendBaseZagruz(): array
@@ -227,7 +216,6 @@ class LardiTrans
      * @param array $parameters Параметры
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.add
      */
     public function sendMyGruzAdd(array $parameters): array
@@ -241,7 +229,6 @@ class LardiTrans
      * @param array $parameters Параметры
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.trans.add
      */
     public function sendMyTransAdd(array $parameters): array
@@ -256,7 +243,6 @@ class LardiTrans
      * @param array $parameters Параметры
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.edit
      */
     public function sendMyGruzEdit(int $id, array $parameters): array
@@ -273,7 +259,6 @@ class LardiTrans
      * @param array $parameters Параметры
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.trans.edit
      */
     public function sendMyTransEdit(int $id, array $parameters): array
@@ -287,7 +272,6 @@ class LardiTrans
      * Получение списка "Мои грузы/транспорт"
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.list
      */
     public function sendMyGruzList(): array
@@ -301,7 +285,6 @@ class LardiTrans
      * @param int $id ID заявки
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.get
      */
     public function sendMyGruzGet(int $id): array
@@ -317,7 +300,6 @@ class LardiTrans
      * @param int $id ID заявки
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.trans.get
      */
     public function sendMyTransGet(int $id): array
@@ -331,7 +313,6 @@ class LardiTrans
      * Получение списка "Мои грузы/транспорт" в сокращенном варианте
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.list.short
      */
     public function sendMyGruzListShort(): array
@@ -345,7 +326,6 @@ class LardiTrans
      * @param int $id ID груза который нужно удалить
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.delete
      */
     public function sendMyGruzDelete(int $id): array
@@ -361,7 +341,6 @@ class LardiTrans
      * @param int $id ID транспорта который нужно удалить
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.trans.delete
      */
     public function sendMyTransDelete(int $id): array
@@ -375,7 +354,6 @@ class LardiTrans
      * Получение списка корзины "Мои грузы/транспорт"
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.trash.list
      */
     public function sendMyGruzTrashList(): array
@@ -389,7 +367,6 @@ class LardiTrans
      * @param int $id ID заявки
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.trash.get
      */
     public function sendMyGruzTrashGet(int $id): array
@@ -405,7 +382,6 @@ class LardiTrans
      * @param int $id ID заявки
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.trans.trash.get
      */
     public function sendMyTransTrashGet(int $id): array
@@ -419,7 +395,6 @@ class LardiTrans
      * Получение списка корзины "Мои грузы/транспорт" в сокращенном варианте
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.trash.list.short
      */
     public function sendMyGruzTrashListShort(): array
@@ -433,7 +408,6 @@ class LardiTrans
      * @param int $id ID груза который нужно удалить из корзины
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.trash.delete
      */
     public function sendMyGruzTrashDelete(int $id): array
@@ -449,7 +423,6 @@ class LardiTrans
      * @param int $id ID транспорта который нужно удалить из корзины
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.trans.trash.delete
      */
     public function sendMyTransTrashDelete(int $id): array
@@ -465,7 +438,6 @@ class LardiTrans
      * @param int $id ID груза который нужно восстановить из корзины
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.trash.return
      */
     public function sendMyGruzTrashReturn(int $id): array
@@ -481,7 +453,6 @@ class LardiTrans
      * @param int $id ID транспорта который нужно восстановить из корзины
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.trans.trash.return
      */
     public function sendMyTransTrashReturn(int $id): array
@@ -497,7 +468,6 @@ class LardiTrans
      * @param int $id ID заявки которую нужно повторить
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.gruz.refresh
      */
     public function sendMyGruzRefresh(int $id): array
@@ -513,7 +483,6 @@ class LardiTrans
      * @param int $id ID заявки которую нужно повторить
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.trans.refresh
      */
     public function sendMyTransRefresh(int $id): array
@@ -529,7 +498,6 @@ class LardiTrans
      * @param array $parameters Параметры
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/distance.calc
      */
     public function sendDistanceCalc(array $parameters): array
@@ -543,7 +511,6 @@ class LardiTrans
      * @param string $name Город или часть его названия
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/distance.search
      */
     public function sendDistanceSearch(string $name): array
@@ -559,7 +526,6 @@ class LardiTrans
      * @param array $parameters Параметры
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.message.dialog.get
      */
     public function sendMyMessageDialogGet(array $parameters = []): array
@@ -573,7 +539,6 @@ class LardiTrans
      * @param string $roomId ID диалога
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.message.dialog.get.contents
      */
     public function sendMyMessageDialogGetContents(string $roomId): array
@@ -592,7 +557,6 @@ class LardiTrans
      *                       прочитанные
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.message.dialog.set.read
      */
     public function sendMyMessageDialogSetRead(string $roomId, bool $status = true): array
@@ -609,7 +573,6 @@ class LardiTrans
      * @param string $roomId ID диалога
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.message.dialog.delete
      */
     public function sendMyMessageDialogDelete(string $roomId): array
@@ -626,7 +589,6 @@ class LardiTrans
      * @param string $text   Текст сообщения
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.message.send
      */
     public function sendMyMessageSend(string $roomId, string $text): array
@@ -644,7 +606,6 @@ class LardiTrans
      *                      будет создана групповая комната
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/my.message.room.id.get
      */
     public function sendMyMessageRoomIdGet(string $refId): array
@@ -658,7 +619,6 @@ class LardiTrans
      * Получить список форм оплаты
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/get.payment.form.ref
      */
     public function sendGetPaymentFormRef(): array
@@ -670,7 +630,6 @@ class LardiTrans
      * Получить список моментов оплаты
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/get.payment.moment.ref
      */
     public function sendGetPaymentMomentRef(): array
@@ -682,7 +641,6 @@ class LardiTrans
      * Получить список единиц оплаты
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/get.payment.unit.ref
      */
     public function sendGetPaymentUnitRef(): array
@@ -694,7 +652,6 @@ class LardiTrans
      * Получить список валют
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/get.payment.valuta.ref
      */
     public function sendGetPaymentValutaRef(): array
@@ -706,7 +663,6 @@ class LardiTrans
      * Получить список типов кузова
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/body.type
      */
     public function sendBodyType(): array
@@ -718,7 +674,6 @@ class LardiTrans
      * Получить список групп типов кузова
      *
      * @return array Ответ сервера в формате JSON
-     * @throws Exception\ApiException
      * @link http://api.lardi-trans.com/doc/body.type.group
      */
     public function sendBodyTypeGroup(): array
